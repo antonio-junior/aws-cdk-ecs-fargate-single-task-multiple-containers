@@ -8,7 +8,9 @@
   "scripts": {
     "build": "tsc",
     "synth": "node index.js",
+    "synth:oneservice": "node index_one_service.js",
     "deploy": "npm run build && npm run synth && cdk deploy",
+    "deploy:oneservice": "npm run build && npm run synth:oneservice && cdk deploy",
     "destroy": "cdk destroy"
   },
   "keywords": [],
