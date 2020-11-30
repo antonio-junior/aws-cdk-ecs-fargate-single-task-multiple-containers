@@ -28,7 +28,7 @@ Install cdk globally
 npm install -g cdk
 ````
 
-Set environment variables (.env file)
+Set environment variables (rename .env.example to .env)
 
 Deploy the application
 ```

@@ -15,9 +15,11 @@ class MyNewFargateApp extends Stack {
 
     const { DB_USER, DB_PWD, DB_PORT, DB_NAME, PORT, SECRET_KEY } = process.env;
 
+    // Network Objects
     const vpc = new Vpc(this, 'MyNewVpc', { maxAzs: 2 });
     const cluster = new Cluster(this, 'MyNewCluster', { vpc });
 
+    // Database Container
     const taskDefinitionDB = new FargateTaskDefinition(this, 'MyNewTaskDefDB');
     const containerDB = taskDefinitionDB.addContainer('db', {
         image: ContainerImage.fromRegistry("bitnami/postgresql:12"),
@@ -64,8 +66,7 @@ class MyNewFargateApp extends Stack {
       ]
     });
 
-    
-
+    // Application API Container
     const taskDefinitionWeb = new FargateTaskDefinition(this, 'MyNewTaskDefWeb');
     const containerApp = taskDefinitionWeb.addContainer('web', {
       image: ContainerImage.fromRegistry("antoniocsjunior/easypoll-graphql"),
