@@ -7,11 +7,11 @@
   "author": "Antônio Junior <acsjunior1@gmail.com>",
   "scripts": {
     "build": "tsc",
-    "synth": "node index.js",
-    "synth:oneservice": "node index_one_service.js",
-    "deploy": "npm run build && npm run synth && cdk deploy",
-    "deploy:oneservice": "npm run build && npm run synth:oneservice && cdk deploy",
-    "destroy": "cdk destroy"
+    "genstask": "node index.js",
+    "deploy:single": "npm run build && npm run genstask && cdk deploy MyNewAppSingleService",
+    "deploy:multi": "npm run build && npm run genstask && cdk deploy MyNewAppMultiService",
+    "destroy:single": "cdk destroy MyNewAppSingleService",
+    "destroy:multi": "cdk destroy MyNewAppMultiService"
   },
   "keywords": [],
   "engines": {

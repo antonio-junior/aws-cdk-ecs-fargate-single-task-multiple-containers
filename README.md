@@ -28,9 +28,20 @@ Install cdk globally
 npm install -g cdk
 ````
 
-Set environment variables (rename .env.example to .env)
+Set environment variables (create a .env file based on .env.example)
 
-Deploy the application
+Deploy the application with containers in a single service
 ```
-npm run deploy
+npm run deploy:single
+```
+or 
+
+Deploy the application with containers in separated services
+```
+npm run deploy:multi
+```
+
+Undeploy application
+```
+npm run destroy
 ```
