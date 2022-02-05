@@ -1,7 +1,8 @@
 import { Vpc, SecurityGroup, Peer, Port} from '@aws-cdk/aws-ec2';
 import { Cluster, ContainerImage, FargateTaskDefinition, Protocol, FargateService } from '@aws-cdk/aws-ecs';
-import { Stack, App, StackProps, Duration } from '@aws-cdk/core';
-import { ApplicationLoadBalancer, ApplicationProtocol } from '@aws-cdk/aws-elasticloadbalancingv2';
+import { Stack, App, StackProps, Duration} from '@aws-cdk/core';
+import { ApplicationLoadBalancer } from '@aws-cdk/aws-elasticloadbalancingv2';
+import { Mesh } from '@aws-cdk/aws-appmesh';
 
 import dotenv from 'dotenv';
 
@@ -18,6 +19,9 @@ class MyNewFargateMultiService extends Stack {
     // Network Objects
     const vpc = new Vpc(this, 'MyNewVpc', { maxAzs: 2 });
     const cluster = new Cluster(this, 'MyNewCluster', { vpc });
+    const mesh = new Mesh(this, 'AppMesh', {
+      meshName: 'myAwsmMesh',
+    });
 
     // Database Container
     const taskDefinitionDB = new FargateTaskDefinition(this, 'MyNewTaskDefDB');
@@ -46,26 +50,6 @@ class MyNewFargateMultiService extends Stack {
       securityGroups: [securityGroupDB]
     });
 
-    const lbDB = new ApplicationLoadBalancer(this, 'MyNewLoadBalancerDB', {
-      vpc
-    });
-    const listenerDB = lbDB.addListener('MyNewListenerDB', { 
-      port: parseInt(DB_PORT as string),
-      protocol: ApplicationProtocol.HTTP,
-      open: true 
-    });
-
-    listenerDB.addTargets('MyECSTargetsDB', {
-      port: parseInt(DB_PORT as string),
-      protocol: ApplicationProtocol.HTTP,
-      targets: [
-        fargateServiceDB.loadBalancerTarget({
-          containerName: 'db',
-          containerPort: parseInt(DB_PORT as string),
-        })
-      ]
-    });
-
     // Application API Container
     const taskDefinitionWeb = new FargateTaskDefinition(this, 'MyNewTaskDefWeb');
     const containerApp = taskDefinitionWeb.addContainer('web', {
@@ -81,6 +65,7 @@ class MyNewFargateMultiService extends Stack {
         SECRET_KEY: SECRET_KEY as string,
       }
     });
+    
     containerApp.addPortMappings({
       containerPort: parseInt(PORT as string),
       protocol: Protocol.TCP
@@ -97,7 +82,7 @@ class MyNewFargateMultiService extends Stack {
       taskDefinition: taskDefinitionWeb,
       securityGroups: [securityGroupWeb]
     });
-
+    
     const scaling = fargateServiceWeb.autoScaleTaskCount({ maxCapacity: 2 });
     scaling.scaleOnCpuUtilization('MyNewCpuScaling', {
       targetUtilizationPercent: 80,

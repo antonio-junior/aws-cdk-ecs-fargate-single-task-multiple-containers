@@ -1,0 +1,18 @@
+{
+    "Comment": "Upsert record for new ECS public address",
+    "Changes": [
+        {
+            "Action": "UPSERT",
+            "ResourceRecordSet": {
+                "Name": "easypoll.cf",
+                "Type": "A",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "54.161.35.205"
+                    }
+                ]
+            }
+        }
+    ]
+}
