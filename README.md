@@ -12,9 +12,13 @@ https://docs.aws.amazon.com/cdk/latest/guide/home.html
 
 ## Application
 The application consists of a GraphQL API using Node.js, Typescript and Oracle.  
+
 The infrastructure was designed to work in containers using Amazon ECS. Amazon ECS is a fully managed container orchestrator service purpose-built for the cloud and integrated with other AWS services.  
+
 In this repository, there are two different stack configurations: single service and multi-service.  
+
 Using the single service configuration, the containers get together sharing all the networking settings. In this way, it is easier for the containers to communicate. Since they are in the same network, every resource is on 'localhost' in different ports. However, single service architecture is hard to scale because there might be unnecessary component duplication due to containers dependency.  
+
 On the other hand, the multi-service configuration has some challenges. This is the way microservices architecture works. Since the services are on different sides of a network, they need an additional component to connect them, such AWS App Mesh. Service meshes are very powerful for environments with multiple services, but they are often notoriously hard to configure.
 
 ## Some steps
